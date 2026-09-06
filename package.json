@@ -1,0 +1,24 @@
+{
+  "name": "qa-cypress-web-tests",
+  "version": "1.0.0",
+  "description": "Automação de testes End-to-End (E2E) com Cypress e JavaScript no e-commerce SauceDemo.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxrcj/qa-cypress-web-tests.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/maxrcj/qa-cypress-web-tests/issues"
+  },
+  "homepage": "https://github.com/maxrcj/qa-cypress-web-tests#readme",
+  "devDependencies": {
+    "cypress": "^16.0.0"
+  }
+}
