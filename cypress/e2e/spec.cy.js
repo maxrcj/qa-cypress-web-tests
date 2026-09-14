@@ -1,35 +1,46 @@
-describe('Login SauceDemo', () => {
-  it('deve logar com sucesso usando credenciais válidas', () => {
-    // 1. Visita a página de login
-    cy.visit('https://www.saucedemo.com/')
+describe('Testes de Automação Web - SauceDemo E-Commerce', () => {
 
-    // 2. Preenche o campo de usuário
-    cy.get('#user-name').type('standard_user')
+  it('Cenário 1: Realizar login com sucesso (Happy Path)', () => {
+    cy.visit('https://www.saucedemo.com/');
 
-    // 3. Preenche o campo de senha
-    cy.get('#password').type('secret_sauce')
+    cy.get('[data-test="username"]').type('standard_user');
+    cy.get('[data-test="password"]').type('secret_sauce');
+    cy.get('[data-test="login-button"]').click();
 
-    // 4. Clica no botão de login
-    cy.get('#login-button').click()
+    cy.url().should('include', '/inventory.html');
+    cy.get('.title').should('be.visible').and('have.text', 'Products');
+  });
 
-    // 5. Verifica se foi redirecionado pra página de produtos (login deu certo)
-    cy.url().should('include', '/inventory.html')
-  })
-  it('não deve logar com senha inválida', () => {
-    // 1. Visita a página de login
-    cy.visit('https://www.saucedemo.com/')
+  it('Cenário 2: Tentar login com senha incorreta (Cenário Negativo)', () => {
+    cy.visit('https://www.saucedemo.com/');
 
-    // 2. Preenche o campo de usuário
-    cy.get('#user-name').type('standard_user')
+    cy.get('[data-test="username"]').type('standard_user');
+    cy.get('[data-test="password"]').type('senha_errada_123');
+    cy.get('[data-test="login-button"]').click();
 
-    // 3. Preenche o campo de senha com valor ERRADO
-    cy.get('#password').type('senha_errada')
+    cy.get('[data-test="error"]')
+      .should('be.visible')
+      .and('contain', 'Username and password do not match');
+  });
 
-    // 4. Clica no botão de login
-    cy.get('#login-button').click()
+  it('Cenário 3: Adicionar produto ao carrinho com sucesso', () => {
+    cy.visit('https://www.saucedemo.com/');
+    cy.get('[data-test="username"]').type('standard_user');
+    cy.get('[data-test="password"]').type('secret_sauce');
+    cy.get('[data-test="login-button"]').click();
 
-    // 5. Verifica se a mensagem de erro apareceu
-    cy.get('[data-test="error"]').should('be.visible')
-    cy.get('[data-test="error"]').should('contain', 'Username and password do not match')
-  })
-})
+    // 1. Clica no botão "Add to cart" da mochila
+    cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').click();
+
+    // 2. Asserção: Valida se o ícone do carrinho subiu para "1"
+    cy.get('.shopping_cart_badge')
+      .should('be.visible')
+      .and('have.text', '1');
+
+    // 3. Entra no carrinho e valida se a mochila está lá dentro
+    cy.get('.shopping_cart_link').click();
+    cy.url().should('include', '/cart.html');
+    cy.get('.inventory_item_name').should('contain', 'Sauce Labs Backpack');
+  });
+
+});
